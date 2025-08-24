@@ -2,6 +2,7 @@ package com.elisasouza.workshopmongo.config;
 
 import com.elisasouza.workshopmongo.domain.Post;
 import com.elisasouza.workshopmongo.domain.User;
+import com.elisasouza.workshopmongo.dto.AuthorDTO;
 import com.elisasouza.workshopmongo.repository.PostRepository;
 import com.elisasouza.workshopmongo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,12 @@ public class Instantiation implements CommandLineRunner {
         User alex = new User(UUID.randomUUID().toString(), "Alex Green", "alex@gmail.com");
         User bob = new User(UUID.randomUUID().toString(), "Bob Grey", "bob@gmail.com");
 
-        Post post1 = new Post(UUID.randomUUID().toString(),sdf.parse("21/03/2018"),"Partiu viagem", "vou viajar para São Paulo. Abraços!", maria);
-        Post post2 = new Post(UUID.randomUUID().toString(),sdf.parse("23/03/2018"),"Bom dia", "Acordei feliz hoje!", maria);
-
+        //Salvando users primeiro por organização, mas na versão atual do Mongo independente da ordem o post associa o ID normalmente. O que não acontecia na versão antiga
         userRepository.saveAll(Arrays.asList(maria,alex,bob));
+
+        Post post1 = new Post(UUID.randomUUID().toString(),sdf.parse("21/03/2018"),"Partiu viagem", "vou viajar para São Paulo. Abraços!", new AuthorDTO(maria));
+        Post post2 = new Post(UUID.randomUUID().toString(),sdf.parse("23/03/2018"),"Bom dia", "Acordei feliz hoje!", new AuthorDTO(maria));
+
         postRepository.saveAll(Arrays.asList(post1,post2));
     }
 }
