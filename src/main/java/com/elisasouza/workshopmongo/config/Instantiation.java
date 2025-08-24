@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 @Configuration
 public class Instantiation implements CommandLineRunner {
@@ -19,9 +20,10 @@ public class Instantiation implements CommandLineRunner {
 
         userRepository.deleteAll();
 
-        User maria = new User(null, "Maria Brown", "maria@gmail.com");
-        User alex = new User(null, "Alex Green", "alex@gmail.com");
-        User bob = new User(null, "Bob Grey", "bob@gmail.com");
+        // Garantir ID como String, porque na versão atual do Spring/Mongo, null gera ObjectId
+        User maria = new User(UUID.randomUUID().toString(), "Maria Brown", "maria@gmail.com");
+        User alex = new User(UUID.randomUUID().toString(), "Alex Green", "alex@gmail.com");
+        User bob = new User(UUID.randomUUID().toString(), "Bob Grey", "bob@gmail.com");
 
         userRepository.saveAll(Arrays.asList(maria,alex,bob));
     }
