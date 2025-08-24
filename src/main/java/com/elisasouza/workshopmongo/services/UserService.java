@@ -29,6 +29,15 @@ public class UserService {
         return userRepository.insert(user);
     }
 
+    public User update(User user){
+        User newUser = userRepository.findById(user.getId()
+                .toString())
+                .orElseThrow(() -> new ObjectNotFoundException("User not found"));
+        updateData(newUser, user);
+        return userRepository.save(newUser);
+    }
+
+
     public void delete(String id){
         findById(id);
         userRepository.deleteById(id);
@@ -36,5 +45,10 @@ public class UserService {
 
     public User fromDTO(UserDTO userDTO){
         return new User(userDTO.getId(), userDTO.getName(), userDTO.getEmail());
+    }
+
+    private void updateData(User newUser, User user) {
+        newUser.setName(user.getName());
+        newUser.setEmail(user.getEmail());
     }
 }
