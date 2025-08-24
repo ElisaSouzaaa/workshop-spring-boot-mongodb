@@ -29,11 +29,16 @@ public class UserService {
         return userRepository.insert(user);
     }
 
-    public User update(User user){
-        User newUser = userRepository.findById(user.getId()
-                .toString())
-                .orElseThrow(() -> new ObjectNotFoundException("User not found"));
-        updateData(newUser, user);
+    public User update(String id, UserDTO userDTO){
+        User newUser = userRepository.findById(id)
+               .orElseThrow(() -> new ObjectNotFoundException("User not found"));
+
+       if(userDTO.getName() != null){
+           newUser.setName(userDTO.getName());
+       }
+       if (userDTO.getEmail() != null){
+           newUser.setEmail(userDTO.getEmail());
+       }
         return userRepository.save(newUser);
     }
 
@@ -47,8 +52,4 @@ public class UserService {
         return new User(userDTO.getId(), userDTO.getName(), userDTO.getEmail());
     }
 
-    private void updateData(User newUser, User user) {
-        newUser.setName(user.getName());
-        newUser.setEmail(user.getEmail());
-    }
 }

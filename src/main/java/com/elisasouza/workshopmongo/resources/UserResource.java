@@ -11,7 +11,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping(value = "/users")
@@ -22,7 +22,7 @@ public class UserResource {
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<UserDTO>> findAll() {
         List<User> list = userService.findAll();
-        List<UserDTO> listDTO = list.stream().map(x -> new UserDTO(x)).collect(Collectors.toList());
+        List<UserDTO> listDTO = list.stream().map(UserDTO::new).toList();
         return ResponseEntity.ok().body(listDTO);
     }
 
@@ -48,10 +48,10 @@ public class UserResource {
 
     @RequestMapping(value = "/{id}",method = RequestMethod.PUT)
     public ResponseEntity<Void> update(@RequestBody UserDTO userDTO, @PathVariable String id) {
-        User user = userService.fromDTO(userDTO);
+        userDTO.setId(id);
         //Para garantir que o usuário vai ter o id da requisição
-        user.setId(id);
-        user = userService.update(user);
+        userDTO.setId(id);
+        userService.update(id, userDTO);
         return ResponseEntity.noContent().build();
     }
 
